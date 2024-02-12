@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
+import java.util.Locale;
 
 
 public class Main {
@@ -284,6 +285,14 @@ public class Main {
         frame.getContentPane().add(button_multiply);
         
         JButton button_sqrt = new JButton("√");
+        button_sqrt.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		//textField.setText(String.valueOf(evaluateExpression(textField.getText())));
+        		double inputValue = Double.parseDouble(textField.getText());
+                double result = Math.sqrt(inputValue);
+                textField.setText(String.format(Locale.US, "%.8f", result));
+        	}
+        });
         button_sqrt.setFocusPainted(false);
         button_sqrt.setFont(new Font("Segoe UI", Font.PLAIN, 24));
         button_sqrt.setForeground(new Color(255, 255, 255));
@@ -399,6 +408,15 @@ public class Main {
             }
         });
         
+        button_dot.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DECIMAL, 0), "pressed DOT");
+        button_dot.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_PERIOD, 0), "pressed DOT");
+        button_dot.getActionMap().put("pressed DOT", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                button_dot.doClick();
+            }
+        });
+
         
         button_0.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_0, 0), "pressed 0");
         button_0.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD0, 0), "pressed 0");
@@ -484,24 +502,7 @@ public class Main {
         
         button_9.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_9, 0), "pressed 9");
         button_9.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD9, 0), "pressed 9");
-        button_9.getActionMap().put("pressed 5", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	button_9.doClick();
-            }
-        });
-        
-        
-        button_9.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("pressed 9"), "pressed 9");
-        button_9.getActionMap().put("pressed 5", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	button_9.doClick();
-            }
-        });
-        
-        button_9.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("pressed 9"), "pressed 9");
-        button_9.getActionMap().put("pressed 5", new AbstractAction() {
+        button_9.getActionMap().put("pressed 9", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	button_9.doClick();
