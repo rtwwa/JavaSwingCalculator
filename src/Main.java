@@ -472,32 +472,7 @@ public class Main {
         button_close.setOpaque(true);
         button_close.setBackground(new Color(0, 0, 0, 0));
         
-        // Array for buttons
-        
-        List<JButton> buttonArray = new ArrayList<>();
-        
-       	buttonArray.add(button_0);
-       	buttonArray.add(button_1);
-       	buttonArray.add(button_2);
-       	buttonArray.add(button_3);
-       	buttonArray.add(button_4);
-       	buttonArray.add(button_5);
-       	buttonArray.add(button_6);
-       	buttonArray.add(button_7);
-       	buttonArray.add(button_8);
-       	buttonArray.add(button_9);
-       	buttonArray.add(button_delete);
-       	buttonArray.add(button_delete_all);
-       	buttonArray.add(button_divide);
-       	buttonArray.add(button_dot);
-       	buttonArray.add(button_equals);
-       	buttonArray.add(button_minus);
-       	buttonArray.add(button_multiply);
-       	buttonArray.add(button_plus);
-       	buttonArray.add(button_recent);
-       	buttonArray.add(button_sqrt);
-       	
-       	JButton button_MC = new JButton("MC");
+        JButton button_MC = new JButton("MC");
        	button_MC.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 memoryValue = BigDecimal.ZERO;
@@ -567,6 +542,36 @@ public class Main {
        	button_MR.setBackground(new Color(59, 59, 59));
        	button_MR.setBounds(73, 71, 53, 51);
        	frame.getContentPane().add(button_MR);
+        
+        // Array for buttons
+        
+        List<JButton> buttonArray = new ArrayList<>();
+        
+       	buttonArray.add(button_0);
+       	buttonArray.add(button_1);
+       	buttonArray.add(button_2);
+       	buttonArray.add(button_3);
+       	buttonArray.add(button_4);
+       	buttonArray.add(button_5);
+       	buttonArray.add(button_6);
+       	buttonArray.add(button_7);
+       	buttonArray.add(button_8);
+       	buttonArray.add(button_9);
+       	buttonArray.add(button_delete);
+       	buttonArray.add(button_delete_all);
+       	buttonArray.add(button_divide);
+       	buttonArray.add(button_dot);
+       	buttonArray.add(button_equals);
+       	buttonArray.add(button_minus);
+       	buttonArray.add(button_multiply);
+       	buttonArray.add(button_plus);
+       	buttonArray.add(button_recent);
+       	buttonArray.add(button_sqrt);
+       	buttonArray.add(button_MMINUS);
+       	buttonArray.add(button_MPLUS);
+       	buttonArray.add(button_MR);
+       	buttonArray.add(button_MS);
+       	buttonArray.add(button_MC);
        	
        	button_recent.addActionListener(new ActionListener() {
        	    public void actionPerformed(ActionEvent e) {
