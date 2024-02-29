@@ -7,25 +7,39 @@ import java.awt.event.FocusEvent;
 import java.awt.event.InputEvent;
 
 import javax.swing.border.CompoundBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
 import java.util.Locale;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
+	
 	private static JTextField textField;
+	static JDesktopPane desktopPane = new JDesktopPane();
+	static List<String> recentExamples = new ArrayList<>();
+	static int fontSize = 42;
+    
     public static void main(String[] args) {
-        
+
+    	
     	final Color greyClr = new Color(44, 44, 44);
     	
-        JFrame frame = new JFrame("Пример GUI");
+        JFrame frame = new JFrame("");
         frame.setTitle("Калькулятор\r\n");
         frame.setBackground(new Color(32, 32, 32));
         frame.getContentPane().setBackground(new Color(32, 32, 32));
-        frame.setSize(345, 517); // установка размеров фрейма
+        frame.setSize(345, 517);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
         
@@ -36,24 +50,29 @@ public class Main {
         textField.setForeground(new Color(255, 255, 255));
         textField.setText("0");
         textField.setHorizontalAlignment(SwingConstants.RIGHT);
-        textField.setFont(new Font("Segoe UI", Font.PLAIN, 36));
+        textField.setFont(new Font("Segoe UI", Font.PLAIN, 42));
         textField.setBounds(10, 10, 310, 59);
         frame.getContentPane().add(textField);
         textField.setColumns(10);
         textField.setOpaque(false);
+
+        GridBagLayout gbl_recentPanel = new GridBagLayout();
+        JPanel recentPanel = new JPanel(gbl_recentPanel);
+        recentPanel.setFocusable(false);
+        recentPanel.setBounds(0, 79, 331, 401);
+        frame.getContentPane().add(recentPanel);
+        recentPanel.setVisible(false);
+        recentPanel.setBackground(greyClr);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.insets = new Insets(5, 5, 5, 5);
+
         
         UIManager.put("Button.select", greyClr);
         
-        JButton button_empty = new JButton("?");
-        button_empty.setEnabled(false);
-        button_empty.setFocusPainted(false);
-        button_empty.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        button_empty.setForeground(new Color(255, 255, 255));
-        button_empty.setBorderPainted(false);
-        button_empty.setBackground(new Color(59, 59, 59));
-        button_empty.setBounds(10, 399, 70, 70);
-        frame.getContentPane().add(button_empty);
-        
+        frame.getContentPane().add(desktopPane);
+
+
         JButton button_0 = new JButton("0");
         button_0.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -89,7 +108,14 @@ public class Main {
         JButton button_equals = new JButton("=");
         button_equals.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		textField.setText(String.valueOf(evaluateExpression(textField.getText())));
+        		try {
+        			String text = textField.getText();
+        			textField.setText(String.valueOf(evaluateExpression(textField.getText())));
+        			addElementInList(recentExamples, text);
+        		}
+        		catch(IndexOutOfBoundsException ex) {
+        			System.err.println("Out of element length, try write full example");
+        		}
         	}
         });
         button_equals.setFocusPainted(false);
@@ -148,10 +174,30 @@ public class Main {
         JButton button_plus = new JButton("+");
         button_plus.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		if (!checkOnlyOneOperator(textField))
-        			return;
-        		textField.setText(textField.getText() + "+");
-        	}
+                String text = textField.getText();
+                if (text.isEmpty()) {
+                    return;
+                }
+
+                if (!checkOnlyOneOperator(textField)) {
+                    return;
+                }
+
+                int lastOperatorIndex = -1;
+                for (char operator : "+-*/".toCharArray()) {
+                    int index = text.lastIndexOf(operator);
+                    if (index > lastOperatorIndex) {
+                        lastOperatorIndex = index;
+                    }
+                }
+                
+                if (lastOperatorIndex == textField.getText().length() - 1)
+                    textField.setText(text.substring(0, lastOperatorIndex) + "+" + text.substring(lastOperatorIndex + 1));
+                if (lastOperatorIndex == -1)
+                    textField.setText(text + "+");
+                
+                return;
+            }
         });
         button_plus.setFocusPainted(false);
         button_plus.setFont(new Font("Segoe UI", Font.PLAIN, 24));
@@ -209,11 +255,30 @@ public class Main {
         JButton button_minus = new JButton("-");
         button_minus.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		if (!checkOnlyOneOperator(textField))
-        			return;
-        		textField.setText(dropZeroFromTextField(textField));
-        		textField.setText(textField.getText() + "-");
-        	}
+                String text = textField.getText();
+                if (text.isEmpty()) {
+                    return;
+                }
+
+                if (!checkOnlyOneOperator(textField)) {
+                    return;
+                }
+
+                int lastOperatorIndex = -1;
+                for (char operator : "+-*/".toCharArray()) {
+                    int index = text.lastIndexOf(operator);
+                    if (index > lastOperatorIndex) {
+                        lastOperatorIndex = index;
+                    }
+                }
+                
+                if (lastOperatorIndex == textField.getText().length() - 1)
+                    textField.setText(text.substring(0, lastOperatorIndex) + "-" + text.substring(lastOperatorIndex + 1));
+                if (lastOperatorIndex == -1)
+                    textField.setText(text + "-");
+                
+                return;
+            }
         });
         button_minus.setFocusPainted(false);
         button_minus.setFont(new Font("Segoe UI", Font.PLAIN, 24));
@@ -270,11 +335,31 @@ public class Main {
         
         JButton button_multiply = new JButton("X");
         button_multiply.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		if (!checkOnlyOneOperator(textField))
-        			return;
-        		textField.setText(textField.getText() + "*");
-        	}
+            public void actionPerformed(ActionEvent e) {
+                String text = textField.getText();
+                if (text.isEmpty()) {
+                    return;
+                }
+
+                if (!checkOnlyOneOperator(textField)) {
+                    return;
+                }
+
+                int lastOperatorIndex = -1;
+                for (char operator : "+-*/".toCharArray()) {
+                    int index = text.lastIndexOf(operator);
+                    if (index > lastOperatorIndex) {
+                        lastOperatorIndex = index;
+                    }
+                }
+                
+                if (lastOperatorIndex == textField.getText().length() - 1)
+                    textField.setText(text.substring(0, lastOperatorIndex) + "*" + text.substring(lastOperatorIndex + 1));
+                if (lastOperatorIndex == -1)
+                    textField.setText(text + "*");
+                
+                return;
+            }
         });
         button_multiply.setFocusPainted(false);
         button_multiply.setFont(new Font("Segoe UI", Font.PLAIN, 18));
@@ -332,10 +417,30 @@ public class Main {
         JButton button_divide = new JButton("/");
         button_divide.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		if (!checkOnlyOneOperator(textField))
-        			return;
-        		textField.setText(textField.getText() + "/");
-        	}
+                String text = textField.getText();
+                if (text.isEmpty()) {
+                    return;
+                }
+
+                if (!checkOnlyOneOperator(textField)) {
+                    return;
+                }
+
+                int lastOperatorIndex = -1;
+                for (char operator : "+-*/".toCharArray()) {
+                    int index = text.lastIndexOf(operator);
+                    if (index > lastOperatorIndex) {
+                        lastOperatorIndex = index;
+                    }
+                }
+                
+                if (lastOperatorIndex == textField.getText().length() - 1)
+                    textField.setText(text.substring(0, lastOperatorIndex) + "/" + text.substring(lastOperatorIndex + 1));
+                if (lastOperatorIndex == -1)
+                    textField.setText(text + "/");
+                
+                return;
+            }
         });
         button_divide.setFocusPainted(false);
         button_divide.setFont(new Font("Segoe UI", Font.PLAIN, 18));
@@ -344,6 +449,110 @@ public class Main {
         button_divide.setBackground(new Color(59, 59, 59));
         button_divide.setBounds(250, 79, 70, 70);
         frame.getContentPane().add(button_divide);
+      
+        JButton button_recent = new JButton("<<<");
+        button_recent.setFocusPainted(false);
+        button_recent.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        button_recent.setForeground(new Color(255, 255, 255));
+        button_recent.setBorderPainted(false);
+        button_recent.setBackground(new Color(59, 59, 59));
+        button_recent.setBounds(10, 399, 70, 70);
+        frame.getContentPane().add(button_recent);
+        
+        JButton button_close = new JButton("X");
+        button_close.setForeground(Color.WHITE);
+        button_close.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        button_close.setFocusPainted(false);
+        button_close.setBorderPainted(false); 
+        button_close.setOpaque(true);
+        button_close.setBackground(new Color(0, 0, 0, 0));
+        
+        // Array for buttons
+        
+        List<JButton> buttonArray = new ArrayList<>();
+        
+       	buttonArray.add(button_0);
+       	buttonArray.add(button_1);
+       	buttonArray.add(button_2);
+       	buttonArray.add(button_3);
+       	buttonArray.add(button_4);
+       	buttonArray.add(button_5);
+       	buttonArray.add(button_6);
+       	buttonArray.add(button_7);
+       	buttonArray.add(button_8);
+       	buttonArray.add(button_9);
+       	buttonArray.add(button_delete);
+       	buttonArray.add(button_delete_all);
+       	buttonArray.add(button_divide);
+       	buttonArray.add(button_dot);
+       	buttonArray.add(button_equals);
+       	buttonArray.add(button_minus);
+       	buttonArray.add(button_multiply);
+       	buttonArray.add(button_plus);
+       	buttonArray.add(button_recent);
+       	buttonArray.add(button_sqrt);
+       	
+       	button_recent.addActionListener(new ActionListener() {
+       	    public void actionPerformed(ActionEvent e) {
+       	        for (JButton button : buttonArray) {
+       	            button.setEnabled(false);
+       	            button.setVisible(false);
+       	        }
+
+       	        recentPanel.setVisible(true);
+
+       	        recentPanel.removeAll();
+
+       	        recentPanel.setLayout(new BoxLayout(recentPanel, BoxLayout.Y_AXIS));
+
+       	        JPanel rightPanel = new JPanel();
+       	        rightPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
+       	        rightPanel.add(button_close);
+       	        rightPanel.setBorder(BorderFactory.createEmptyBorder());
+       	        rightPanel.setOpaque(false);
+       	        recentPanel.add(rightPanel);
+
+       	        for (String str : recentExamples) {
+       	            JLabel lb = new JLabel(str);
+       	            lb.setForeground(Color.white);
+       	            lb.setOpaque(true);
+       	            lb.setBackground(new Color(0, 0, 0, 0));
+       	            Font newFont = lb.getFont().deriveFont(lb.getFont().getSize() * 2f);
+       	            lb.setFont(newFont);
+       	            
+       	            lb.addMouseListener(new MouseAdapter() {
+       	                public void mouseClicked(MouseEvent e) {
+       	                	textField.setText(lb.getText());
+       	                	
+       	                }
+       	            });
+
+       	            
+       	            JPanel labelPanel = new JPanel();
+       	            labelPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+       	            labelPanel.add(lb);
+       	            labelPanel.setOpaque(false);
+       	            labelPanel.setBackground(new Color(0, 0, 0, 0));
+       	            
+       	            recentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+       	            recentPanel.add(labelPanel);
+       	        }
+       	        
+       	        button_close.addActionListener(new ActionListener() {
+       	        	public void actionPerformed(ActionEvent e) {
+       	        		recentPanel.setVisible(false);
+       	        		if (buttonArray.isEmpty())
+       	        			return;
+       	       	        for (JButton button : buttonArray) {
+       	       	            button.setEnabled(true);
+       	       	            button.setVisible(true);
+       	       	        }
+       	        	}
+       	        });
+       	        
+       	    }
+       	});
         
         // Binding keys for buttons
         
@@ -511,6 +720,42 @@ public class Main {
         
         //
         
+        textField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                adjustFontSize();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                adjustFontSize();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+
+            private void adjustFontSize() {
+                if (textField.getText().length() > 12) {
+                    if (fontSize > 18) {
+                    	fontSize = fontSize - 1;
+                        textField.setFont(new Font("Segou UI", Font.PLAIN, fontSize));
+                    }
+                }
+                
+                if (textField.getText().length() <= 12 && textField.getText().length() > 1) {
+                	fontSize = 42;
+                	textField.setFont(new Font("Segou UI", Font.PLAIN, fontSize));
+                }
+            	
+            	if (textField.getText() == "0" || textField.getText().length() == 1) {
+            		fontSize = 42;
+            		textField.setFont(new Font("Segou UI", Font.PLAIN, fontSize));
+            	}
+            }
+        });
+        
+        
         frame.setResizable(false);
         frame.setVisible(true);
     }
@@ -530,19 +775,28 @@ public class Main {
     
     private static boolean checkOnlyOneOperator(JTextField tf) {
         String text = tf.getText();
-        char[] charText = text.toCharArray();        
-        
-        if (charText[0] == '-') {
-        	text = tf.getText().substring(1);
+        if (text.isEmpty()) {
+            return true;
         }
-        
+
+        char[] charText = text.toCharArray();
+        if (charText[0] == '-') {
+            text = text.substring(1);
+        }
+
+        int operatorCount = 0;
         for (char ch : "+-*/".toCharArray()) {
-            if (text.indexOf(ch) != -1) {
+            operatorCount += countChar(text, ch);
+            if (operatorCount > 1) {
                 return false;
             }
         }
 
         return true;
+    }
+
+    private static int countChar(String str, char ch) {
+        return (int) str.chars().filter(c -> c == ch).count();
     }
 
     private static BigDecimal evaluateExpression(String expression) {
@@ -568,7 +822,7 @@ public class Main {
                 if (secondOperand.equals(BigDecimal.ZERO)) {
                     return new BigDecimal("0");
                 }
-                return firstOperand.divide(secondOperand, 8, BigDecimal.ROUND_HALF_UP);
+                return firstOperand.divide(secondOperand, 8, BigDecimal.ROUND_HALF_UP).stripTrailingZeros();
             default:
                 throw new RuntimeException("Неподдерживаемая операция: " + operator);
         }
@@ -639,5 +893,13 @@ public class Main {
         }
         
         return true;
+    }
+    
+    private static void addElementInList(List<String> List, String line) {
+    	if (List.size() > 4) {
+    		List.remove(List.size() - 1);
+    	}
+    	
+    	List.add(0, line);
     }
 }
