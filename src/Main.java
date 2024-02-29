@@ -28,7 +28,8 @@ public class Main {
 	private static JTextField textField;
 	static JDesktopPane desktopPane = new JDesktopPane();
 	static List<String> recentExamples = new ArrayList<>();
-	static int fontSize = 42;
+	static int fontSize = 40;
+	static BigDecimal memoryValue = BigDecimal.ZERO;
     
     public static void main(String[] args) {
 
@@ -39,7 +40,7 @@ public class Main {
         frame.setTitle("Калькулятор\r\n");
         frame.setBackground(new Color(32, 32, 32));
         frame.getContentPane().setBackground(new Color(32, 32, 32));
-        frame.setSize(345, 517);
+        frame.setSize(345, 570);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
         
@@ -59,10 +60,10 @@ public class Main {
         GridBagLayout gbl_recentPanel = new GridBagLayout();
         JPanel recentPanel = new JPanel(gbl_recentPanel);
         recentPanel.setFocusable(false);
-        recentPanel.setBounds(0, 79, 331, 401);
+        recentPanel.setBounds(0, 71, 331, 462);
         frame.getContentPane().add(recentPanel);
-        recentPanel.setVisible(false);
         recentPanel.setBackground(greyClr);
+        recentPanel.setVisible(false);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.EAST;
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -85,7 +86,7 @@ public class Main {
         button_0.setForeground(new Color(255, 255, 255));
         button_0.setBorderPainted(false);
         button_0.setBackground(new Color(59, 59, 59));
-        button_0.setBounds(90, 399, 70, 70);
+        button_0.setBounds(90, 453, 70, 70);
         frame.getContentPane().add(button_0);
         
         JButton button_dot = new JButton(".");
@@ -102,7 +103,7 @@ public class Main {
         button_dot.setForeground(new Color(255, 255, 255));
         button_dot.setBorderPainted(false);
         button_dot.setBackground(new Color(59, 59, 59));
-        button_dot.setBounds(170, 399, 70, 70);
+        button_dot.setBounds(170, 453, 70, 70);
         frame.getContentPane().add(button_dot);
         
         JButton button_equals = new JButton("=");
@@ -123,7 +124,7 @@ public class Main {
         button_equals.setForeground(new Color(255, 255, 255));
         button_equals.setBorderPainted(false);
         button_equals.setBackground(new Color(59, 59, 59));
-        button_equals.setBounds(250, 399, 70, 70);
+        button_equals.setBounds(250, 453, 70, 70);
         frame.getContentPane().add(button_equals);
         
         JButton button_1 = new JButton("1");
@@ -138,7 +139,7 @@ public class Main {
         button_1.setForeground(new Color(255, 255, 255));
         button_1.setBorderPainted(false);
         button_1.setBackground(new Color(59, 59, 59));
-        button_1.setBounds(10, 319, 70, 70);
+        button_1.setBounds(10, 373, 70, 70);
         frame.getContentPane().add(button_1);
         
         JButton button_2 = new JButton("2");
@@ -153,7 +154,7 @@ public class Main {
         button_2.setForeground(new Color(255, 255, 255));
         button_2.setBorderPainted(false);
         button_2.setBackground(new Color(59, 59, 59));
-        button_2.setBounds(90, 319, 70, 70);
+        button_2.setBounds(90, 373, 70, 70);
         frame.getContentPane().add(button_2);
         
         JButton button_3 = new JButton("3");
@@ -168,7 +169,7 @@ public class Main {
         button_3.setForeground(new Color(255, 255, 255));
         button_3.setBorderPainted(false);
         button_3.setBackground(new Color(59, 59, 59));
-        button_3.setBounds(170, 319, 70, 70);
+        button_3.setBounds(170, 373, 70, 70);
         frame.getContentPane().add(button_3);
         
         JButton button_plus = new JButton("+");
@@ -204,7 +205,7 @@ public class Main {
         button_plus.setForeground(new Color(255, 255, 255));
         button_plus.setBorderPainted(false);
         button_plus.setBackground(new Color(59, 59, 59));
-        button_plus.setBounds(250, 319, 70, 70);
+        button_plus.setBounds(250, 373, 70, 70);
         frame.getContentPane().add(button_plus);
         
         JButton button_4 = new JButton("4");
@@ -219,7 +220,7 @@ public class Main {
         button_4.setForeground(new Color(255, 255, 255));
         button_4.setBorderPainted(false);
         button_4.setBackground(new Color(59, 59, 59));
-        button_4.setBounds(10, 239, 70, 70);
+        button_4.setBounds(10, 293, 70, 70);
         frame.getContentPane().add(button_4);
         
         JButton button_5 = new JButton("5");
@@ -234,7 +235,7 @@ public class Main {
         button_5.setForeground(new Color(255, 255, 255));
         button_5.setBorderPainted(false);
         button_5.setBackground(new Color(59, 59, 59));
-        button_5.setBounds(90, 239, 70, 70);
+        button_5.setBounds(90, 293, 70, 70);
         frame.getContentPane().add(button_5);
         
         JButton button_6 = new JButton("6");
@@ -249,7 +250,7 @@ public class Main {
         button_6.setForeground(new Color(255, 255, 255));
         button_6.setBorderPainted(false);
         button_6.setBackground(new Color(59, 59, 59));
-        button_6.setBounds(170, 239, 70, 70);
+        button_6.setBounds(170, 293, 70, 70);
         frame.getContentPane().add(button_6);
         
         JButton button_minus = new JButton("-");
@@ -285,7 +286,7 @@ public class Main {
         button_minus.setForeground(new Color(255, 255, 255));
         button_minus.setBorderPainted(false);
         button_minus.setBackground(new Color(59, 59, 59));
-        button_minus.setBounds(250, 239, 70, 70);
+        button_minus.setBounds(250, 293, 70, 70);
         frame.getContentPane().add(button_minus);
         
         JButton button_7 = new JButton("7");
@@ -300,7 +301,7 @@ public class Main {
         button_7.setForeground(new Color(255, 255, 255));
         button_7.setBorderPainted(false);
         button_7.setBackground(new Color(59, 59, 59));
-        button_7.setBounds(10, 159, 70, 70);
+        button_7.setBounds(10, 213, 70, 70);
         frame.getContentPane().add(button_7);
         
         JButton button_8 = new JButton("8");
@@ -315,7 +316,7 @@ public class Main {
         button_8.setForeground(new Color(255, 255, 255));
         button_8.setBorderPainted(false);
         button_8.setBackground(new Color(59, 59, 59));
-        button_8.setBounds(90, 159, 70, 70);
+        button_8.setBounds(90, 213, 70, 70);
         frame.getContentPane().add(button_8);
         
         JButton button_9 = new JButton("9");
@@ -330,7 +331,7 @@ public class Main {
         button_9.setForeground(new Color(255, 255, 255));
         button_9.setBorderPainted(false);
         button_9.setBackground(new Color(59, 59, 59));
-        button_9.setBounds(170, 159, 70, 70);
+        button_9.setBounds(170, 213, 70, 70);
         frame.getContentPane().add(button_9);
         
         JButton button_multiply = new JButton("X");
@@ -366,7 +367,7 @@ public class Main {
         button_multiply.setForeground(new Color(255, 255, 255));
         button_multiply.setBorderPainted(false);
         button_multiply.setBackground(new Color(59, 59, 59));
-        button_multiply.setBounds(250, 159, 70, 70);
+        button_multiply.setBounds(250, 213, 70, 70);
         frame.getContentPane().add(button_multiply);
         
         JButton button_sqrt = new JButton("√");
@@ -374,6 +375,10 @@ public class Main {
         	public void actionPerformed(ActionEvent e) {
         		//textField.setText(String.valueOf(evaluateExpression(textField.getText())));
         		double inputValue = Double.parseDouble(textField.getText());
+        		if (inputValue <= 0) {
+        			textField.setText("0");
+        			return;
+        		}
                 double result = Math.sqrt(inputValue);
                 textField.setText(String.format(Locale.US, "%.8f", result));
         	}
@@ -383,10 +388,10 @@ public class Main {
         button_sqrt.setForeground(new Color(255, 255, 255));
         button_sqrt.setBorderPainted(false);
         button_sqrt.setBackground(new Color(59, 59, 59));
-        button_sqrt.setBounds(10, 79, 70, 70);
+        button_sqrt.setBounds(10, 133, 70, 70);
         frame.getContentPane().add(button_sqrt);
         
-        JButton button_delete_all = new JButton("CE");
+        JButton button_delete_all = new JButton("C");
         button_delete_all.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		textField.setText("0");
@@ -397,7 +402,7 @@ public class Main {
         button_delete_all.setForeground(new Color(255, 255, 255));
         button_delete_all.setBorderPainted(false);
         button_delete_all.setBackground(new Color(59, 59, 59));
-        button_delete_all.setBounds(90, 79, 70, 70);
+        button_delete_all.setBounds(90, 133, 70, 70);
         frame.getContentPane().add(button_delete_all);
         
         JButton button_delete = new JButton("<-");
@@ -411,7 +416,7 @@ public class Main {
         button_delete.setForeground(new Color(255, 255, 255));
         button_delete.setBorderPainted(false);
         button_delete.setBackground(new Color(59, 59, 59));
-        button_delete.setBounds(170, 79, 70, 70);
+        button_delete.setBounds(170, 133, 70, 70);
         frame.getContentPane().add(button_delete);
         
         JButton button_divide = new JButton("/");
@@ -447,7 +452,7 @@ public class Main {
         button_divide.setForeground(new Color(255, 255, 255));
         button_divide.setBorderPainted(false);
         button_divide.setBackground(new Color(59, 59, 59));
-        button_divide.setBounds(250, 79, 70, 70);
+        button_divide.setBounds(250, 133, 70, 70);
         frame.getContentPane().add(button_divide);
       
         JButton button_recent = new JButton("<<<");
@@ -456,7 +461,7 @@ public class Main {
         button_recent.setForeground(new Color(255, 255, 255));
         button_recent.setBorderPainted(false);
         button_recent.setBackground(new Color(59, 59, 59));
-        button_recent.setBounds(10, 399, 70, 70);
+        button_recent.setBounds(10, 453, 70, 70);
         frame.getContentPane().add(button_recent);
         
         JButton button_close = new JButton("X");
@@ -491,6 +496,77 @@ public class Main {
        	buttonArray.add(button_plus);
        	buttonArray.add(button_recent);
        	buttonArray.add(button_sqrt);
+       	
+       	JButton button_MC = new JButton("MC");
+       	button_MC.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                memoryValue = BigDecimal.ZERO;
+            }
+        });
+       	button_MC.setForeground(Color.WHITE);
+       	button_MC.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+       	button_MC.setFocusPainted(false);
+       	button_MC.setBorderPainted(false);
+       	button_MC.setBackground(new Color(59, 59, 59));
+       	button_MC.setBounds(10, 71, 53, 51);
+       	frame.getContentPane().add(button_MC);
+       	
+       	JButton button_MS = new JButton("MS");
+       	button_MS.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                memoryValue = new BigDecimal(textField.getText());
+            }
+        });
+       	button_MS.setForeground(Color.WHITE);
+       	button_MS.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+       	button_MS.setFocusPainted(false);
+       	button_MS.setBorderPainted(false);
+       	button_MS.setBackground(new Color(59, 59, 59));
+       	button_MS.setBounds(267, 71, 53, 51);
+       	frame.getContentPane().add(button_MS);
+       	
+       	JButton button_MPLUS = new JButton("M+");
+       	button_MPLUS.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                memoryValue = memoryValue.add(new BigDecimal(textField.getText()));
+            }
+        });
+       	button_MPLUS.setForeground(Color.WHITE);
+       	button_MPLUS.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+       	button_MPLUS.setFocusPainted(false);
+       	button_MPLUS.setBorderPainted(false);
+       	button_MPLUS.setBackground(new Color(59, 59, 59));
+       	button_MPLUS.setBounds(140, 71, 53, 51);
+       	frame.getContentPane().add(button_MPLUS);
+       	
+       	JButton button_MMINUS = new JButton("M-");
+       	button_MMINUS.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                memoryValue = memoryValue.subtract(new BigDecimal(textField.getText()));
+            }
+        });
+       	button_MMINUS.setForeground(Color.WHITE);
+       	button_MMINUS.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+       	button_MMINUS.setFocusPainted(false);
+       	button_MMINUS.setBorderPainted(false);
+       	button_MMINUS.setBackground(new Color(59, 59, 59));
+       	button_MMINUS.setBounds(204, 71, 53, 51);
+       	frame.getContentPane().add(button_MMINUS);
+       	
+       	JButton button_MR = new JButton("MR");
+       	button_MR.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                textField.setText(memoryValue.toString());
+            }
+        });
+       	button_MR.setForeground(Color.WHITE);
+       	button_MR.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+       	button_MR.setFocusPainted(false);
+       	button_MR.setBorderPainted(false);
+       	button_MR.setBackground(new Color(59, 59, 59));
+       	button_MR.setBounds(73, 71, 53, 51);
+       	frame.getContentPane().add(button_MR);
        	
        	button_recent.addActionListener(new ActionListener() {
        	    public void actionPerformed(ActionEvent e) {
@@ -724,6 +800,7 @@ public class Main {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 adjustFontSize();
+                checkMaxLength();
             }
 
             @Override
@@ -735,6 +812,13 @@ public class Main {
             public void changedUpdate(DocumentEvent e) {
             }
 
+            private void checkMaxLength() {
+            	if (textField.getText().length() > 29) {
+            		String newText = textField.getText().substring(0, 29);
+                    textField.setText(newText);
+            	}
+            }
+            
             private void adjustFontSize() {
                 if (textField.getText().length() > 12) {
                     if (fontSize > 18) {
@@ -744,12 +828,12 @@ public class Main {
                 }
                 
                 if (textField.getText().length() <= 12 && textField.getText().length() > 1) {
-                	fontSize = 42;
+                	fontSize = 40;
                 	textField.setFont(new Font("Segou UI", Font.PLAIN, fontSize));
                 }
             	
             	if (textField.getText() == "0" || textField.getText().length() == 1) {
-            		fontSize = 42;
+            		fontSize = 40;
             		textField.setFont(new Font("Segou UI", Font.PLAIN, fontSize));
             	}
             }
